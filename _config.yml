@@ -1,0 +1,12 @@
+title: HWW Portfolio
+description: Software and Hardware Developer
+google_analytics: UA-129022385-1
+theme: jekyll-theme-slate
+show_downloads: false
+github:
+  is_project_page: false
+  owner_url: 
+  public: false
+github.is_project_page: false
+github.owner_url: 
+github.public: false
