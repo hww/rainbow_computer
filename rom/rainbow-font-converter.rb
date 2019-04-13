@@ -13,9 +13,9 @@ for y in 0..15 do
 			data = contents[addr]
                         for bit in [128,64,32,16,8,4,2,1] do
                           if data & bit > 0
-                            print "X"
+                            print "█"
                           else
-                            print "."
+                            print " "
                           end
                         end
 			print " "
