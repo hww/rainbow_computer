@@ -1,4 +1,4 @@
-#!/bn/ruby
+#!/usr/bin/ruby
 
 file = File.open("rainbow-font.BIN", "rb")
 contents = file.read.bytes
