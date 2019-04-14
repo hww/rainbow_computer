@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# coding: utf-8
 
 file = File.open("rainbow-font.BIN", "rb")
 contents = file.read.bytes
@@ -13,9 +14,9 @@ for y in 0..15 do
 			data = contents[addr]
                         for bit in [128,64,32,16,8,4,2,1] do
                           if data & bit > 0
-                            print "█"
-                          else
                             print " "
+                          else
+                            print "█"
                           end
                         end
 			print " "
