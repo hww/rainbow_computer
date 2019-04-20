@@ -222,3 +222,8 @@
 
 ![Mixing Two Signals](./images/sound-diagram-2.png)
  
+## 20.04.2019 RGB ЦАП (Диаграмма)
+
+Линейное нарастание яркости канала (8МГц) 
+
+![RGB Diagram](./images/rgb-dac-diagram-1.png)
