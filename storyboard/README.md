@@ -1,239 +1,239 @@
-# Компьютер РАДУГА
-**Поэтапный процесс воссоздания схемы**
+# RADUGA Computer
+**Step-by-step schematic reverse-engineering process**
 
-### 28.03.2019 Плата
+### 28.03.2019 Board
 
-Мне привезли нерабочую плату компьютера из Омска. На плате отсутсвует 13 микросхем, от которых остались только позолоченные выводы. Вероятно миросхемы кто-то сдал в драгмет. На плате имеется доработка, одна микросхема допаяна сверху. Также отсутсвуют многие дискретные компоненты, скорее всего конденсаторы или диоды. 
+A non-working computer board was brought to me from Omsk. Thirteen ICs are missing from the board, leaving only their gold-plated pins behind. Someone probably harvested the chips for precious metals. There is a board modification with one IC soldered on top. Many discrete components are also missing—most likely capacitors or diodes. 
 
-*Мои действия* 
+*My actions* 
 
-Первым делом были выпаяны остатки выводов. Судя по всему, часть "золотых" микросхем была К533 или К1533 серии. Также очевидно, что часть из них - это адресный мультиплексор, а это упрощает срисовывание схемы. Хуже то, что при "выкусывании" микросхем были повреждены трассы, а также "выкушены" часть резисторов (видимо мешали обогащаться).
+First, I desoldered the remaining pins. Apparently, some of the "gold" ICs belonged to the K533 or K1533 series. It is also obvious that some of them are address multiplexers, which simplifies tracing the schematic. Worse yet, some traces were damaged when the ICs were clipped off, and some resistors were clipped off too (apparently getting in the way of the scavenging).
 
-Лицевая сторона платы сильно подверглась окислению, видимо из-за агрессивного флюса который не был смыт. С обратной стороны использовалась канифоль, но в неприличных количествах и она не была смыта. 
+The front side of the board suffered heavy oxidation, likely due to aggressive flux that was never washed off. Rosin was used on the back side, but in obscene amounts and also left uncleaned. 
 
-"Ушло" грамм двести изопропанола и столько же растворителя 646 чтобы смыть все это. Но некоторые трассы под флюсом частично разрушились.
+It took about two hundred grams of isopropanol and the same amount of 646 solvent to wash it all off. However, some traces under the flux were partially destroyed.
 
-Теперь стало ясно, что это самая первая плата Радуги. Первые платы с завода были немного бракованые: переходные отверстия слишком малы, текстолит не слишком качественный, медь на нем держалась плохо, а трассы были слишком тонкие, включая трассы питания. Было решено платы доработать, а из этих собрать первый прототип для проверки. Первый прототип от конечной Радуги отличался, но сказать сейчас чем, не могу.
+It has now become clear that this is the very first Raduga board. The initial factory boards were somewhat defective: the vias were too small, the fiberglass PCB material wasn't great, the copper adhered poorly to it, and the traces—including the power rails—were too thin. It was decided to modify the boards and assemble the first prototype from them for testing. The first prototype differed from the final Raduga, though I can't say how right now.
 
-Другие недостатки платы:
+Other board flaws:
 
-- Дискретные элементы (резисторы, диоды, коденсаторы) запакованы в посадочное место DIP.
-- Углы трасс 90 градусов.
-- Часто трасса подходит к выводу сбоку (то есть сперва трасса идет в направлении между выводами и поравнявшись с выводом разворачивается на 90 градусов)
+- Discrete components (resistors, diodes, capacitors) are packed into DIP footprints.
+- 90-degree trace angles.
+- Traces often approach a pin from the side (meaning the trace first runs between pins and makes a 90-degree turn once aligned with the pin).
 
-Все вышеперечисленное усложняет разводку, сборку и наладку.
+All of the above complicates routing, assembly, and debugging.
 
-## 29.03.2019 ПЗУ
+## 29.03.2019 ROM
 
-Две из трех стоящих на плате ПЗУ были в панельках, но оказались муляжом. Несмотря на то, что одна из них 2764, на самом деле по трассам все три места места только под 2716 (573РФ5). 
+Two of the three ROMs on the board were in sockets, but turned out to be dummies. Even though one of them is a 2764, the PCB traces show that all three footprints are actually wired strictly for 2716 (573RF5). 
 
-Третье, запаяное ПЗУ имеет маркер карандашом "ЗН". Вероятно "знакогенератор" и это логично. Выпаять микросхему не удалось, выводы слишком плотно сидят в посадочных отверстиях, зазоры малы, можно сказать их вообще нет. 
+The third, soldered-in ROM has "ЗН" (CG - Character Generator) written on it in pencil. Probably "character generator," which makes sense. I couldn't desolder the chip—the pins sit too tightly in the mounting holes with virtually no clearance. 
 
-Отрезав питание от микросхемы, подключив программатор к соседней панельке многократно считываю содержимое, данные постоянны и каждый раз совпадают. 
+After cutting power to the IC and hooking up a programmer to the neighboring socket, I read the contents multiple times; the data is consistent and matches every time. 
 
-![Считывание ПЗУ знакогенератора](./images/reading_rom.jpg)
+![Reading character generator ROM](./images/reading_rom.jpg)
 
-Однако сами данные "мусор". :(  
+However, the data itself is "garbage". :(  
 
-![Считывание ПЗУ знакогенератора](./images/reading_garbage.png)
+![Reading character generator ROM](./images/reading_garbage.png)
 
-### 30.03.2019 Клавиатура (Дешифратор)
+### 30.03.2019 Keyboard (Decoder)
 
-Для сканирования клавиатуры установлен 1555ИД3. Выходы которого через 13 диодов подключены к разъему. 
+A 1555ID3 is installed for keyboard scanning. Its outputs are connected to the connector through 13 diodes. 
 
-![Дешифратор клавиатуры](./images/keyboard_dc_1.png)
+![Keyboard decoder](./images/keyboard_dc_1.png)
 
-Входы дешифратора подключены к параллельному порту (1), а их в системе используется два, назовем их условно PPI1 и PPI2.
+The decoder inputs are connected to parallel port (1)—the system uses two of them, let's conventionally call them PPI1 and PPI2.
 
-![Дешифратор клавиатуры](./images/keyboard_dc_2.png)
+![Keyboard decoder](./images/keyboard_dc_2.png)
 
-### 30.03.2019 ОЗУ
+### 30.03.2019 RAM
 
-На плате установлены 16 микросхем 565РУ5 и 4 микросхемы 589АП16. Восемь из 16 микросхем также подключены к 589ИР12, выводы которой подключены к 155ИР1. Другие восемь микросхем имеют две 589ИР12 и также две 155ИР1. Схема очень похожа на "Специалист". Но в отличие от "Специалиста", входы и выходы данных у микросхем памяти замкнуты. Также замкнуты входы и выходы шинных формирователей, сделано это для упрощения трассировки.
+The board has 16 565RU5 ICs and 4 589AP16 ICs installed. Eight of the 16 memory ICs are also connected to a 589IR12, whose pins connect to a 155IR1. The other eight ICs have two 589IR12s and two 155IR1s as well. The circuit is very similar to the "Specialist" computer. However, unlike the "Specialist," the data inputs and outputs of the memory ICs are tied together. The inputs and outputs of the bus transceivers are also tied together; this was done to simplify PCB routing.
 
-![ОЗУ пикселов](./images/dram_pixels_1.png)
+![Pixel RAM](./images/dram_pixels_1.png)
 
-Сигналы ~RAS и ~WE у всех микосхем объеденены, а вот ~CAS раздельные у каждого байта.
+The ~RAS and ~WE signals are tied together across all ICs, while ~CAS is separate for each byte.
 
-Дополнительная 589ИР12 имеет замкнутые входы и выходы, видимо это "копир" мы его еще называли "пересылочный регистр".
+The extra 589IR12 has tied inputs and outputs—apparently, this is the "copier," which we also used to call the "transfer register".
 
-![ОЗУ цветов](./images/dram_colors_1.png)
+![Color RAM](./images/dram_colors_1.png)
 
-Вывод 6 у всех четырех сдвиговых регистров объединен, а вывод 9 у микросхем отвечающих за цвет соединен с землей. Вывод 8 у них подключен к 8,9 выводу регистров отвечающих за яркость точки.
+Pin 6 of all four shift registers is tied together, while pin 9 of the ICs responsible for color is connected to ground. Their pin 8 is connected to pins 8 and 9 of the registers responsible for pixel brightness.
 
-![ОЗУ пикселов 1](./images/dram_pixels_2.png)
-![ОЗУ цветов 2](./images/dram_colors_2.png)
+![Pixel RAM 1](./images/dram_pixels_2.png)
+![Color RAM 2](./images/dram_colors_2.png)
 
-*Звук*
+*Sound*
 
-Таймер ВИ53 генерирует три частоты, каждая имеет логарифмический ЦАП на 8 шагов. 
+The VI53 timer generates three frequencies, each having an 8-step logarithmic DAC. 
 
-![DB53](./images/volume_dac_1.png)
+![VI53](./images/volume_dac_1.png)
 
-Микросхемы ЦАП отсуствуют, но полагаю стояли 533ИД10. У каждого дешифратора используется только три входа и 8 выходов. Резисторы сохранились и на них видны номиналы.
+The DAC ICs are missing, though I assume 533ID10s were used. Each decoder uses only three inputs and 8 outputs. The resistors survived, and their values are legible.
 
-![Номиналы резисторов ЦАП](./images/audio_dac.jpg)
+![DAC resistor values](./images/audio_dac.jpg)
 
-Получается примерно такая схема.
+This yields roughly the following schematic.
 
-![Схема одного ЦАП](./images/volume_dac_2.png)
+![Single DAC schematic](./images/volume_dac_2.png)
 
-Я помню, что для минимизации были выбраны именно 8 шагов логарифмической шкалы. Шкалу нельзя назвать логарифмической, точнее она приближенная к логарифму. Номиналы резистора отличались примерно вдвое, но они подключались последовательно в цепь. Отступы от удвоенных значений были подобраны так, чтобы получался более-менее приемлемый результат при очень скромной схемотехнике.
+I remember that an 8-step logarithmic scale was chosen specifically for minimization. You can't strictly call the scale logarithmic; rather, it approximates a logarithm. The resistor values differed by roughly a factor of two, and they were connected in series in the circuit. The deviations from exact doubled values were selected to achieve a more or less acceptable result with very modest circuitry.
 
-Всего четыре канала ABCD, и четвертый используется для шума.
+There are four channels in total (ABCD), with the fourth one used for noise.
 
-![Схема всех четырех ЦАП](./images/volume_dac_3.png)
+![All four DACs schematic](./images/volume_dac_3.png)
 
-Входы дешифраторв ЦАП подключены к парралельным программируемым портам (1) и (2)
+The inputs of the DAC decoders are connected to programmable parallel ports (1) and (2)
 
-![PPI1 ЦАП](./images/volume_dac_4.png)
-![PPI2 ЦАП](./images/volume_dac_5.png)
+![PPI1 DAC](./images/volume_dac_4.png)
+![PPI2 DAC](./images/volume_dac_5.png)
 
-Максимальная громкость сигнала получается при значении на входе дешифратора 0, а минимальная при значении 7.
-В результате получается следующая зависимость значения на входе дешифратора (по X) и значение нижнего плеча делителя (по Y).
+Maximum signal volume is achieved with a decoder input value of 0, and minimum volume at a value of 7.
+This results in the following relationship between the decoder input value (X-axis) and the lower divider leg value (Y-axis).
 
-![PPI2 ЦАП Зависимость](./images/volume_dac_7.png)
+![PPI2 DAC Relationship](./images/volume_dac_7.png)
 
-Помню в первых версиях плат был "шелест" и потрескивание в звуке при переходе громкости от одной к другой. Связано было с перезарядкой электролитической ёмкости в тракте. Затем проблему удалось устранить. 
+I remember that early versions of the boards had a "rustling" and crackling sound during volume transitions. This was caused by an electrolytic capacitor recharging in the audio path. The issue was later resolved. 
 
-Особенность схемотехники такова, что в случае программирования таймера на выдачу константной величины 1, система позволяла воспроизводить звук изменением лишь громкости. Это было сделано умышленно и заимствовано в PSG у MSX.
+A quirk of this circuit design is that by programming the timer to output a constant high (1), the system could play audio solely by modulating the volume. This was done intentionally and borrowed from the MSX PSG.
 
 ### 01.04.2019 COLORS
 
-После регистров пиксел и цвета следует мультиплексор и одна из двух опций палитры. Теоретически мультиплексор формирут один из четырех вариантов цвета.
+Following the pixel and color registers is a multiplexer and one of two palette options. Theoretically, the multiplexer outputs one of four color variants.
 
-| COLSELECT | Результат |
-|-----------|-----------|
-| 0 | Младшая тетрада цвета из цветового буфера |
-| 1 | Старшая тетрада цвета из цветового буфера |
-| 2 | Цвет бордюра |
-| 3 | Нулевой цвет |
+| COLSELECT | Result |
+|-----------|--------|
+| 0 | Lower color nibble from the color buffer |
+| 1 | Upper color nibble from the color buffer |
+| 2 | Border color |
+| 3 | Zero color |
 
-![ОЗУ пикселов 1](./images/dram_colors_3.png)
+![Pixel RAM 1](./images/dram_colors_3.png)
 
-Цвет бордюра поступает от программируемого параллельного порта PPI 1. 
+The border color comes from programmable parallel port PPI 1. 
 
-![ОЗУ пикселов 1](./images/dram_colors_4.png)
+![Pixel RAM 1](./images/dram_colors_4.png)
 
-### 02.04.2019 УСИЛИТЕЛЬ ЗВУКА
+### 02.04.2019 AUDIO AMPLIFIER
 
-Усилитель собран на половине 548УН1А, а выходной каскад на КТ814,КТ815. Большей части дискретных элементов усилителя на плате нет. Поэтому я нарисую заново схему усилителя. 
+The amplifier is built around half of a 548UN1A, with the output stage using KT814 and KT815 transistors. Most of the amplifier's discrete components are missing from the board. Therefore, I will redraw the amplifier schematic from scratch. 
 
-На второй половинке собран генератор шума для звуковой системы. Возможно используется КТ3102 с базой на общем, коллектором не подключенным и эмитером куда-то в операционнике.
+The second half of the IC houses a noise generator for the audio system. It likely uses a KT3102 with its base grounded, collector unconnected, and emitter feeding somewhere into the op-amp.
 
-### 02.04.2019 УСИЛИТЕЛЬ МАГНИТОФОНА
+### 02.04.2019 TAPE RECORDER AMPLIFIER
 
-На этой плате он собран на 140УД6. Схема напоминает ту, что в СПЕЦИАЛИСТе, но есть и отличия. Однако опять, элементов в плате недостаточно чтобы повторить этот вариант. Я буду использовать вариант из СПЕЦАЛИСТа. Выход схемы подключен к PPI1.PB7
+On this board, it is built around a 140UD6. The circuit resembles the one in the SPECIALIST, though with some differences. However, once again, there aren't enough components left on the board to replicate this exact variant. I will use the variant from the SPECIALIST. The circuit output connects to PPI1.PB7
 
-### 03.03.2019 Контроллер CRT
+### 03.03.2019 CRT Controller
 
-Немного продвинулась схема генератора синхросигналов. Во многом она повторяет схему от СПЕЦИАЛИСТ.
+Progress has been made on the sync generator schematic. It largely mirrors the schematic from the SPECIALIST.
 
 ![CRT 1](./images/clock_1.png)
 
-### 09.04.2019 Системный Разъем 
+### 09.04.2019 System Connector
 
-После небольшой паузы частично срисован разъем расширения. Судя по всему, кроме клавиатуры на разъем выведен параллельный интерфейс. Возможно принтер или универсальный порт расширения.
+After a short break, the expansion connector has been partially traced. Apparently, besides the keyboard, a parallel interface is routed to the connector—possibly a printer or general-purpose expansion port.
 
 ![Expansion 1](./images/expansion_1.png)
 
-### 11.04.2019 Системный Разъем 
+### 11.04.2019 System Connector
 
-Два 8ми битных порта PPI2 подключены к разъему расширения. Это позволяет подключать различные периферийные устройства с программируемым интерфейсом: принтер, джойстик, covox, контроллер FD
+Two 8-bit ports of PPI2 are connected to the expansion connector. This allows connecting various peripherals with a programmable interface: a printer, joystick, Covox, or FDD controller
 
 ![Expansion 2](./images/expansion_2.png)
 
-Таким образом, функции PPI2 можно считать полностью понятными. Исключение в том, что не ясно как они использовались периферийным устройстом или внутри корпуса компьютера. Возможно, что на некоторых пинах был переключатель с задней панели, а возможно что на некоторых был подключен светодиод.
+Thus, the functions of PPI2 can be considered completely understood. The only exception is that it's unclear how they were used by a peripheral device or inside the computer's case. Perhaps some pins went to a rear-panel switch, or maybe an LED was connected to some of them.
 
 ![PPI2](./images/ppi2_1.png)
 
-Функции PPI1 можно считать почти полностью понятными. Исключение PPI1.PB6, его назначение пока неизвестно.
+The functions of PPI1 can be considered almost completely understood. The exception is PPI1.PB6, whose purpose remains unknown for now.
 
 ![PPI1](./images/ppi1_1.png)
 
-*Небольшое дополнение:* _Подключение выводов PPI1 и PPI2 к системному разьему не дает полной информации об их использовании внутри платы. Дальнейшее исследование может показать, что некоторые из этих выводов имеют какую-либо функцию внутри платы._ 
+*Small note:* _Connecting PPI1 and PPI2 pins to the system connector does not give the full picture of their on-board usage. Further investigation may show that some of these pins serve an internal function on the board._ 
 
-### 13.04.2019 Фонт попытка 2
+### 13.04.2019 Font Attempt 2
 
-Пока схема сканировалась нашлось интересное КЗ на адресной шине. А это могло привести к неверному чтению запаяного ПЗУ. Было принято решение выпять ПЗУ. Сперва лишний припой был удален, затем микросхема пропаяна сплавом Розе. Затем термофеном нагрета до 150 градусов, и она просто выпала из посадочного места.
+While tracing the schematic, an interesting short circuit was found on the address bus. That could have caused the soldered-in ROM to read incorrectly. I decided to desolder the ROM. First, excess solder was removed, then the IC pins were tinned with Rose's metal. Next, it was heated with a hot air gun to 150 degrees, and it simply dropped out of its footprint.
 
-Считывание данных показало другой результат (файл тут [ROM](../rom/rainbow-font.BIN)) 
+Reading the data yielded a different result (file here [ROM](../rom/rainbow-font.BIN)) 
 
-Фонт выглядит так, как на следующем рисунке.
+The font looks like the following image.
 
 ![Raibow Font PNG](../rom/rainbow-font-image.png)
 
-Размер символа 5x7 поэтому теоретически для монохромного экрана позволял отображать 64 символа в строке. К сожалению, заветных 80-ти символов не было, но и 64 лучше чем 48.
+The character size is 5x7, so theoretically, a monochrome screen could display 64 characters per line. Unfortunately, the coveted 80 characters weren't there, though 64 is still better than 48.
 
-Невозможно утверждать, был ли этот фонт конечный, или использовался только в прототипе. Но даже если фонт изменился и стал 7х7 вряд ли изменилась кодировка. А кодировка должна соотвествовать кодировке в MSX.
+It's impossible to say whether this font was final or used only in the prototype. However, even if the font changed to 7x7, the character encoding is unlikely to have changed. And the encoding should match the MSX encoding.
 
-### 13.04.2019 Бракованные DRAM 
+### 13.04.2019 Defective DRAM
 
-В прототипе стоят микросхемы памяти с браком, старшая линия ROWS отсутсвует. Действительно, я помню что приходили и использовались микросхемы у которых было только половина памяти.
+The prototype uses defective memory ICs where the upper ROWS line is missing. Indeed, I remember that chips with only half of their memory functional used to arrive and were put to use.
 
-### 14.04.2019 Короткий отчет по прогрессу
+### 14.04.2019 Brief Progress Report
 
-- CRT контроллер срисован процентов на 99%
-- CPU на 90%
-- INT контроллер на 90%
-- COPIER на 80%
-- Peripheral & Sound на 99%
-- DRAM & MUX на 99%
+- CRT controller traced to about 99%
+- CPU at 90%
+- INT controller at 90%
+- COPIER at 80%
+- Peripheral & Sound at 99%
+- DRAM & MUX at 99%
 
-Очень приблизительно можно говрить о раскладке памяти.
+We can very roughly outline the memory map.
 
 ![Memory Map](./images/mem_map_1.png)
 
 ### 15.04.2019 COPIER
 
-Сформировалась схема "копира", она довольно простая, но требовалось разобраться с сигналами которые она использует.
+The "copier" schematic has taken shape; it's fairly simple, though it took some effort to figure out the signals it uses.
 
 ![COPIER 1](./images/copier-1.png)
 
-Вот так может выглядеть логика работы этой схемы.
+Here is how the logic of this circuit might work.
 
 ![COPIER 2](./images/copier-2.png)
 
-Иными словами, можно читать и писать по адресу копира FB00. 
-Альтернативно можно считывая данные из страницы 2 (8000-BFFF) модифицировать "копир" цветом. Записывая в страницу 2 модифицировать буфер цвета содержимым копира.
+In other words, you can read and write at the copier address FB00. 
+Alternatively, reading data from page 2 (8000-BFFF) modifies the "copier" with color. Writing to page 2 modifies the color buffer with the copier's contents.
 
-Других режимов копира не видно, во всяком случае на этой плате. Думаю, что тоже самое могло быть и в конечном продукте.
+No other copier modes are apparent, at least on this board. I think the exact same thing could have been in the final product.
 
-## 18.04.2019 Первая альфа версия схемы
+## 18.04.2019 First Alpha Version of the Schematic
 
-Ну вот и всё, первая версия схемы опубликована. Осталось найти и устранить ошибки. Затем перенумеровать REFDES и добавить в схему блокировочные конденсаторы.
+Well, that's it—the first version of the schematic has been published. What remains is to find and fix errors, then renumber the REFDES and add decoupling capacitors to the schematic.
 
 [Schematic A2](../sch/raduga_computer_sch_a2.pdf)
 
-Нумерация микросхема там где возможно совпадает со СПЕЦИАЛИСТ-ом, начиная с U99 и дальше идут микросхемы Радуги.
+Wherever possible, IC numbering matches the SPECIALIST, starting from U99 and onward for Raduga's own ICs.
 
-## 20.04.2019 ЦАП горомкости и миксер (Диаграмма)
+## 20.04.2019 Volume DAC and Mixer (Diagram)
 
-Смешивание вух каналов:
+Mixing two channels:
 
-1) 1КГц (с огибающей громкости -1 на частоте 400Гц)
-2) 5КГц (с огибающей громкости -1 на частоте 800Гц) 
+1) 1 kHz (with a -1 volume envelope at 400 Hz)
+2) 5 kHz (with a -1 volume envelope at 800 Hz) 
 
 ![Mixing Two Signals](./images/sound-diagram-1.png)
  
- Смешивание вух каналов:
+Mixing two channels:
 
-1) 1КГц (с огибающей громкости -1 на частоте 400Гц)
-2) 5КГц синусоиды которая имитирует шум (с огибающей громкости -1 на частоте 800Гц) 
+1) 1 kHz (with a -1 volume envelope at 400 Hz)
+2) 5 kHz sine wave simulating noise (with a -1 volume envelope at 800 Hz) 
 
 ![Mixing Two Signals](./images/sound-diagram-2.png)
  
-## 20.04.2019 RGB ЦАП (Диаграмма)
+## 20.04.2019 RGB DAC (Diagram)
 
-Линейное нарастание яркости канала (8МГц) и синхросигнал
+Linear channel brightness ramp (8 MHz) and sync signal
 
 ![RGB Diagram](./images/rgb-dac-diagram-1.png)
 
-## 21.04.2019 Дружественная для печати схема
+## 21.04.2019 Print-Friendly Schematic
 
-Цвета схемы конвертированы в дружественные для печати.
+Schematic colors have been converted to print-friendly versions.
 
-- Приципиальная схема [в цвете](../sch/raduga_computer_sch_a2.pdf)
-- Приципиальная схема [в монохроме](../sch/raduga_computer_sch_a2_bw.pdf)
+- Schematic diagram [in color](../sch/raduga_computer_sch_a2.pdf)
+- Schematic diagram [in monochrome](../sch/raduga_computer_sch_a2_bw.pdf)
 
-Это последнее обновление альфа версии. С этого момента refdes будут перенумерованы.
+This is the final update for the alpha version. From this point forward, the refdes will be renumbered.
